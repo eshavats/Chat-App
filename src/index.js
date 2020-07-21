@@ -11,6 +11,12 @@ const {
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+const {
+  addUser,
+  removeUser,
+  getUser,
+  getUsersInRoom,
+} = require("./utils/users");
 
 const port = process.env.PORT || 3000;
 
@@ -20,11 +26,19 @@ app.use(express.static(publicDirectoryPath));
 io.on("connection", (socket) => {
   console.log("New Websocket Connection!");
 
-  socket.on("join", ({ username, room }) => {
-    socket.join(room);
+  socket.on("join", ({ username, room }, callback) => {
+    const { error, user } = addUser({ id: socket.id, username, room });
+
+    if (error) {
+      return callback(error);
+    }
+
+    socket.join(user.room);
     socket.emit("message", generateMessage("Welcome!"));
 
-    socket.broadcast.to(room).emit("message", generateMessage(`${username} has joined`));
+    socket.broadcast
+      .to(user.room)
+      .emit("message", generateMessage(`${user.username} has joined`));
   });
 
   socket.on("sendMessage", (clientMessage, callback) => {
@@ -47,7 +61,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    io.emit("message", generateMessage("A user has left!"));
+    const user = removeUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit(
+        "message",
+        generateMessage(`${user.username} has left!`)
+      );
+    }
   });
 });
 
