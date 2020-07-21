@@ -1,29 +1,51 @@
 const socket = io();
 
+//Elements
+const $messageForm = document.getElementById("msg-form");
+const $messageFormInput = document.getElementById("data");
+const $messageFormBtn = document.getElementById("send-msg");
+const $locationBtn = document.getElementById("send-location");
+const $messages = document.getElementById("messages");
+
+//Templates
+const messageTemplate = document.getElementById("message-template").innerHTML;
+
 socket.on("message", (message) => {
   console.log(message);
+  const html = Mustache.render(messageTemplate, {
+    message
+  });
+  $messages.insertAdjacentHTML("beforeend", html);
 });
 
-document.getElementById("msg-form").addEventListener("submit", (e) => {
+$messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  const inputMessage = document.getElementById("data").value;
+  //disable send message button till the message is successfully delivered
+  $messageFormBtn.setAttribute("disabled", "disabled");
+  const inputMessage = $messageFormInput.value;
 
   socket.emit("sendMessage", inputMessage, (message) => {
+    //enable send message button when the message is successfully delivered
+    $messageFormBtn.removeAttribute("disabled");
+    $messageFormInput.value = "";
+    $messageFormInput.focus();
     console.log(`Server says: ${message}`);
   });
 });
 
-document.getElementById("send-location").addEventListener("click", () => {
+$locationBtn.addEventListener("click", () => {
   if (!navigator.geolocation) {
     return alert("Geolocation is not supported by your browser");
   }
 
+  $locationBtn.setAttribute("disabled", "disabled");
   navigator.geolocation.getCurrentPosition((position) => {
     const location = {
       lat: position.coords.latitude,
       long: position.coords.longitude,
     };
     socket.emit("sendLocation", location, () => {
+      $locationBtn.removeAttribute("disabled");
       console.log("Location shared!");
     });
   });

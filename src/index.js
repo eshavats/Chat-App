@@ -13,10 +13,9 @@ const port = process.env.PORT || 3000;
 const publicDirectoryPath = path.join(__dirname, "../public");
 app.use(express.static(publicDirectoryPath));
 
-const message = "Welcome!";
 io.on("connection", (socket) => {
   console.log("New Websocket Connection!");
-  socket.emit("message", message);
+  socket.emit("message", "Welcome!");
 
   socket.broadcast.emit("message", "A new user has joined!");
 
