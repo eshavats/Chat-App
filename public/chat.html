@@ -12,16 +12,25 @@
   </head>
   <body>
     <div class="chat">
-      <div class="chat__sidebar"></div>
+      <div id="sidebar" class="chat__sidebar"></div>
       <div class="chat__main">
         <div id="messages" class="chat__messages"></div>
 
         <div class="compose">
           <form id="message-form">
-            <input id="input-msg" placeholder="Message" required autocomplete="off" />
-            <button id="send-msg"><i class="fas fa-paper-plane"></i> Send</button>
+            <input
+              id="input-msg"
+              placeholder="Message"
+              required
+              autocomplete="off"
+            />
+            <button id="send-msg">
+              <i class="fas fa-paper-plane"></i> Send
+            </button>
           </form>
-          <button id="send-location"><i class="fas fa-map-marker-alt"></i> Send location</button>
+          <button id="send-location">
+            <i class="fas fa-map-marker-alt"></i> Send location
+          </button>
         </div>
       </div>
     </div>
@@ -44,6 +53,16 @@
           </p>
           <p><a href="{{url}}" target="_blank">My current location</a></p>
       </div>
+    </script>
+
+    <script id="sidebar-template" type="text/html">
+      <h2 class="room-title">{{room}}</h2>
+      <h3 class="list-title">Users</h3>
+      <ul class="users">
+          {{#users}}
+          <li>{{username}}</li>
+          {{/users}}
+      </ul>
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
