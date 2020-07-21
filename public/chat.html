@@ -18,7 +18,7 @@
 
         <div class="compose">
           <form id="message-form">
-            <input id="input-msg" placeholder="Message" />
+            <input id="input-msg" placeholder="Message" required autocomplete="off" />
             <button id="send-msg"><i class="fas fa-paper-plane"></i> Send</button>
           </form>
           <button id="send-location"><i class="fas fa-map-marker-alt"></i> Send location</button>
@@ -29,7 +29,7 @@
     <script id="message-template" type="text/html">
       <div class="message">
           <p>
-              <span class="message__name">Esha Vats</span>
+              <span class="message__name">{{username}}</span>
               <span class="message__meta">{{createdAt}}</span>
           </p>
           <p>{{message}}</p>
@@ -39,7 +39,7 @@
     <script id="location-message-template" type="text/html">
       <div class="message">
           <p>
-              <span class="message__name">Esha Vats</span>
+              <span class="message__name">{{username}}</span>
               <span class="message__meta">{{createdAt}}</span>
           </p>
           <p><a href="{{url}}" target="_blank">My current location</a></p>
