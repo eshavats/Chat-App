@@ -9,11 +9,20 @@ const $messages = document.getElementById("messages");
 
 //Templates
 const messageTemplate = document.getElementById("message-template").innerHTML;
+const locationTemplate = document.getElementById("location-message-template").innerHTML;
 
 socket.on("message", (message) => {
   console.log(message);
   const html = Mustache.render(messageTemplate, {
-    message
+    message,
+  });
+  $messages.insertAdjacentHTML("beforeend", html);
+});
+
+socket.on("locationMessage", (url) => {
+  console.log(url);
+  const html = Mustache.render(locationTemplate, {
+    url,
   });
   $messages.insertAdjacentHTML("beforeend", html);
 });
